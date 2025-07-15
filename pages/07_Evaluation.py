@@ -645,9 +645,9 @@ print(f"Effect size: {effect_size:.3f} ({interpretation})")
         dates = pd.date_range('2024-01-01', periods=30, freq='D')
         performance_data = {
             'Date': dates,
-            'MMLU Score': 65 + 10 * np.random.cumsum(np.random.randn(30)) * 0.01,
-            'HumanEval Score': 45 + 8 * np.random.cumsum(np.random.randn(30)) * 0.01,
-            'Safety Score': 85 + 5 * np.random.cumsum(np.random.randn(30)) * 0.01
+            'MMLU Score': 65 + 10 * np.cumsum(np.random.randn(30)) * 0.01,
+            'HumanEval Score': 45 + 8 * np.cumsum(np.random.randn(30)) * 0.01,
+            'Safety Score': 85 + 5 * np.cumsum(np.random.randn(30)) * 0.01
         }
         
         perf_df = pd.DataFrame(performance_data)
@@ -808,7 +808,7 @@ with planning_tabs[2]:
             name=phase,
             marker_color=colors[i],
             text=f"{days} days",
-            textposition="middle center",
+            textposition="inside",
             hovertext=description
         ))
     
