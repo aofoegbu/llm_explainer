@@ -7,6 +7,7 @@ This repository contains a comprehensive Streamlit web application that provides
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Application title: Changed from "🤖 Complete LLM Training Pipeline Guide" to "Ogelo Concise LLM Training Pipeline Guide" (July 15, 2025)
 
 ## System Architecture
 

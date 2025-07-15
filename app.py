@@ -19,7 +19,7 @@ if 'current_stage' not in st.session_state:
     st.session_state.current_stage = 0
 
 def main():
-    st.title("🤖 Complete LLM Training Pipeline Guide")
+    st.title("Ogelo Concise LLM Training Pipeline Guide")
     st.markdown("### An Interactive Journey Through Large Language Model Development")
     
     # Sidebar navigation
