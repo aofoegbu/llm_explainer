@@ -4,6 +4,14 @@
 
 This repository contains a comprehensive Streamlit web application that provides an interactive guide through the complete Large Language Model (LLM) training pipeline. The application serves as an educational tool, walking users through each stage of LLM development from data collection to deployment with detailed explanations, visualizations, and practical examples.
 
+## Recent Changes
+
+- **July 15, 2025**: Updated application title to "Ogelo Concise LLM Training Pipeline Guide"
+- **July 15, 2025**: Fixed all critical syntax and runtime errors across 18 pages
+- **July 15, 2025**: Resolved training flow diagram arrow connections and positioning
+- **July 15, 2025**: Fixed RLHF page NameError for evaluation_methods variable
+- **July 15, 2025**: Created comprehensive README.md with full feature documentation
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
