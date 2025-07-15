@@ -799,3 +799,318 @@ Rate the response on how well it follows this principle (1-10):
 """
             }
         ]
+        
+        for method in evaluation_methods:
+            with st.expander(f"🔍 {method['method']}"):
+                st.markdown(method['description'])
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("**Advantages:**")
+                    for advantage in method['advantages']:
+                        st.markdown(f"• {advantage}")
+                
+                with col2:
+                    st.markdown("**Disadvantages:**")
+                    for disadvantage in method['disadvantages']:
+                        st.markdown(f"• {disadvantage}")
+                
+                st.markdown("**Implementation:**")
+                st.code(method['implementation'], language='python')
+
+# Advanced RLHF techniques
+st.header("🚀 Advanced RLHF Techniques")
+
+advanced_tabs = st.tabs([
+    "🔄 Iterative RLHF",
+    "🎯 Multi-Objective RLHF", 
+    "📊 Online Learning",
+    "🔧 Debugging RLHF"
+])
+
+with advanced_tabs[0]:
+    st.subheader("🔄 Iterative RLHF")
+    
+    st.markdown("""
+    Iterative RLHF involves multiple rounds of human feedback collection and model training
+    to continuously improve model performance.
+    """)
+    
+    iterative_process = [
+        "Initial model training with supervised fine-tuning",
+        "Collect human preferences on model outputs", 
+        "Train reward model on preference data",
+        "Run PPO to optimize policy using reward model",
+        "Deploy updated model and collect new feedback",
+        "Retrain reward model with additional data",
+        "Continue cycle until satisfactory performance"
+    ]
+    
+    for i, step in enumerate(iterative_process, 1):
+        st.markdown(f"{i}. {step}")
+    
+    st.markdown("### 💻 Iterative RLHF Implementation")
+    
+    st.code("""
+class IterativeRLHF:
+    def __init__(self, base_model, tokenizer):
+        self.base_model = base_model
+        self.tokenizer = tokenizer
+        self.reward_model = None
+        self.policy_model = None
+        self.iteration = 0
+        
+    def run_iteration(self, prompts, human_feedback_func):
+        print(f"Starting RLHF iteration {self.iteration + 1}")
+        
+        # Step 1: Generate responses with current model
+        responses = self.generate_responses(prompts)
+        
+        # Step 2: Collect human feedback
+        preference_data = human_feedback_func(prompts, responses)
+        
+        # Step 3: Update reward model
+        if self.reward_model is None:
+            self.reward_model = self.train_initial_reward_model(preference_data)
+        else:
+            self.reward_model = self.update_reward_model(preference_data)
+        
+        # Step 4: Run PPO optimization
+        self.policy_model = self.run_ppo_optimization()
+        
+        # Step 5: Evaluate improvements
+        evaluation_metrics = self.evaluate_model()
+        
+        self.iteration += 1
+        
+        return evaluation_metrics
+    
+    def generate_responses(self, prompts):
+        model = self.policy_model if self.policy_model else self.base_model
+        responses = []
+        
+        for prompt in prompts:
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            
+            with torch.no_grad():
+                outputs = model.generate(
+                    **inputs,
+                    max_new_tokens=256,
+                    do_sample=True,
+                    temperature=0.7,
+                    pad_token_id=self.tokenizer.eos_token_id
+                )
+            
+            response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            responses.append(response[len(prompt):].strip())
+        
+        return responses
+    
+    def train_initial_reward_model(self, preference_data):
+        # Train reward model from scratch
+        reward_model = RewardModel(self.base_model.config.name_or_path)
+        
+        # Prepare training data
+        train_dataloader = self.prepare_reward_training_data(preference_data)
+        
+        optimizer = torch.optim.AdamW(reward_model.parameters(), lr=1e-5)
+        
+        reward_model.train()
+        for epoch in range(3):  # Few epochs for reward model
+            for batch in train_dataloader:
+                optimizer.zero_grad()
+                
+                preferred_rewards = reward_model(
+                    batch['preferred_input_ids'], 
+                    batch['preferred_attention_mask']
+                )
+                dispreferred_rewards = reward_model(
+                    batch['dispreferred_input_ids'],
+                    batch['dispreferred_attention_mask']
+                )
+                
+                loss = ranking_loss(preferred_rewards, dispreferred_rewards)
+                loss.backward()
+                optimizer.step()
+        
+        return reward_model
+    
+    def run_ppo_optimization(self):
+        # Initialize PPO trainer
+        ppo_trainer = PPOTrainer(
+            model=self.policy_model if self.policy_model else self.base_model,
+            reward_model=self.reward_model,
+            tokenizer=self.tokenizer
+        )
+        
+        # Run PPO training
+        optimized_model = ppo_trainer.train(num_epochs=1)
+        
+        return optimized_model
+
+# Usage example
+rlhf = IterativeRLHF(base_model, tokenizer)
+
+# Run multiple iterations
+for iteration in range(5):
+    metrics = rlhf.run_iteration(training_prompts, human_feedback_collector)
+    print(f"Iteration {iteration + 1} metrics: {metrics}")
+""", language='python')
+
+with advanced_tabs[1]:
+    st.subheader("🎯 Multi-Objective RLHF")
+    
+    st.markdown("""
+    Multi-objective RLHF optimizes for multiple competing objectives simultaneously,
+    such as helpfulness, harmlessness, and honesty.
+    """)
+    
+    objectives = [
+        {
+            "objective": "Helpfulness",
+            "description": "Providing useful and informative responses",
+            "metrics": ["Task completion rate", "User satisfaction", "Information accuracy"]
+        },
+        {
+            "objective": "Harmlessness", 
+            "description": "Avoiding harmful or dangerous outputs",
+            "metrics": ["Safety violations", "Bias detection", "Toxic content rate"]
+        },
+        {
+            "objective": "Honesty",
+            "description": "Being truthful and acknowledging uncertainty",
+            "metrics": ["Factual accuracy", "Uncertainty expression", "Source reliability"]
+        }
+    ]
+    
+    for obj in objectives:
+        with st.expander(f"🎯 {obj['objective']}"):
+            st.markdown(obj['description'])
+            
+            st.markdown("**Key Metrics:**")
+            for metric in obj['metrics']:
+                st.markdown(f"• {metric}")
+
+with advanced_tabs[2]:
+    st.subheader("📊 Online Learning in RLHF")
+    
+    st.markdown("""
+    Online learning allows continuous model improvement during deployment
+    by incorporating real-time user feedback.
+    """)
+    
+    online_challenges = [
+        "Distribution shift between training and deployment",
+        "Balancing exploration vs exploitation",
+        "Handling contradictory feedback", 
+        "Maintaining model stability",
+        "Computational efficiency constraints"
+    ]
+    
+    st.markdown("**Key Challenges:**")
+    for challenge in online_challenges:
+        st.markdown(f"• {challenge}")
+
+with advanced_tabs[3]:
+    st.subheader("🔧 Debugging RLHF")
+    
+    st.markdown("""
+    RLHF training can be unstable and difficult to debug. Here are common issues and solutions.
+    """)
+    
+    debugging_issues = [
+        {
+            "issue": "Reward Hacking",
+            "description": "Model exploits reward function flaws",
+            "solutions": [
+                "Diversify training data",
+                "Use ensemble reward models", 
+                "Add regularization terms",
+                "Monitor for unexpected behaviors"
+            ]
+        },
+        {
+            "issue": "Training Instability",
+            "description": "PPO training becomes unstable or diverges",
+            "solutions": [
+                "Lower learning rates",
+                "Increase batch sizes",
+                "Use gradient clipping",
+                "Add KL divergence penalties"
+            ]
+        },
+        {
+            "issue": "Poor Generalization",
+            "description": "Model performs well on training tasks but poorly on new ones",
+            "solutions": [
+                "Increase data diversity",
+                "Use cross-validation",
+                "Implement regularization",
+                "Test on held-out datasets"
+            ]
+        }
+    ]
+    
+    for issue in debugging_issues:
+        with st.expander(f"🐛 {issue['issue']}"):
+            st.markdown(issue['description'])
+            
+            st.markdown("**Solutions:**")
+            for solution in issue['solutions']:
+                st.markdown(f"• {solution}")
+
+# Best practices
+st.header("💡 RLHF Best Practices")
+
+best_practices = [
+    "**Start Simple**: Begin with basic SFT before adding RLHF complexity",
+    "**Quality Over Quantity**: High-quality human feedback is more valuable than large volumes",
+    "**Diverse Evaluators**: Use multiple human annotators to capture different perspectives", 
+    "**Regular Evaluation**: Continuously monitor model performance on held-out test sets",
+    "**Iterative Approach**: Run multiple RLHF cycles rather than trying to perfect in one round",
+    "**Safety First**: Prioritize safety and alignment over raw performance metrics",
+    "**Documentation**: Maintain detailed records of training procedures and decisions",
+    "**Stakeholder Involvement**: Include diverse stakeholders in the feedback process",
+    "**Computational Planning**: RLHF is expensive - plan resources accordingly",
+    "**Failure Analysis**: Systematically analyze and learn from failure cases"
+]
+
+for practice in best_practices:
+    st.markdown(f"• {practice}")
+
+# Resources
+st.header("📚 Learning Resources")
+
+resources = [
+    {
+        "title": "Training Language Models to Follow Instructions with Human Feedback",
+        "type": "Research Paper",
+        "description": "Original InstructGPT paper introducing RLHF for LLMs",
+        "difficulty": "Advanced"
+    },
+    {
+        "title": "Constitutional AI: Harmlessness from AI Feedback", 
+        "type": "Research Paper",
+        "description": "Anthropic's approach to AI-assisted constitutional training",
+        "difficulty": "Advanced"
+    },
+    {
+        "title": "TRL (Transformer Reinforcement Learning)",
+        "type": "Library",
+        "description": "Hugging Face library for RLHF and PPO training",
+        "difficulty": "Intermediate"
+    },
+    {
+        "title": "Deep Reinforcement Learning from Human Preferences",
+        "type": "Research Paper", 
+        "description": "Foundational work on learning from human preferences",
+        "difficulty": "Advanced"
+    }
+]
+
+for resource in resources:
+    with st.expander(f"📖 {resource['title']}"):
+        st.markdown(f"**Type:** {resource['type']}")
+        st.markdown(f"**Description:** {resource['description']}")
+        st.markdown(f"**Difficulty:** {resource['difficulty']}")

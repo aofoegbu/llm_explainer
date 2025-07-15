@@ -107,6 +107,11 @@ def main():
             st.markdown("---")
             st.subheader("🔮 Next Up")
             st.info(f"**{next_stage['name']}**\n\n{next_stage['description'][:100]}...")
+            
+            # Next up button
+            if st.button("▶️ Go to Next Stage", key="next_stage_btn"):
+                st.session_state.current_stage += 1
+                st.rerun()
         else:
             st.markdown("---")
             st.success("🎉 Congratulations! You've completed the entire pipeline!")

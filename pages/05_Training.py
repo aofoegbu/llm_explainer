@@ -212,7 +212,7 @@ with training_tabs[1]:
             "Linear Warmup + Decay": np.where(
                 steps < warmup_steps,
                 max_lr * steps / warmup_steps,
-                max_lr * (1 - (steps - warmup_steps) / (len(steps) - warmup_steps))
+                max_lr * np.maximum(0, (1 - (steps - warmup_steps) / np.maximum(1, len(steps) - warmup_steps)))
             ),
             "Cosine Annealing": max_lr * 0.5 * (1 + np.cos(np.pi * steps / len(steps))),
             "Exponential Decay": max_lr * np.exp(-steps / 2000)

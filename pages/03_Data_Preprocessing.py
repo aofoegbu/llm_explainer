@@ -291,8 +291,31 @@ print(f"IDs: {encoded.ids}")
         
         df_comparison = pd.DataFrame(comparison_data)
         
-        fig = px.radar(df_comparison, r='Vocabulary Efficiency', theta='Method', 
-                      title="Tokenizer Performance Comparison")
+        # Create radar chart using Scatterpolar
+        fig = go.Figure()
+        
+        methods = df_comparison['Method'].tolist()
+        metrics = ['Vocabulary Efficiency', 'OOV Handling', 'Training Speed', 'Inference Speed']
+        
+        for metric in metrics:
+            fig.add_trace(go.Scatterpolar(
+                r=df_comparison[metric].tolist(),
+                theta=methods,
+                fill='toself',
+                name=metric,
+                line=dict(width=2)
+            ))
+        
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 10]
+                )),
+            title="Tokenizer Performance Comparison",
+            showlegend=True,
+            height=500
+        )
         st.plotly_chart(fig, use_container_width=True)
 
 with tabs[3]:

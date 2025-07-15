@@ -374,19 +374,31 @@ model = get_peft_model(model, lora_config)
     
     peft_df = pd.DataFrame(peft_comparison)
     
-    fig = px.radar(
-        peft_df, r='Efficiency', theta='Method',
-        title="PEFT Methods Radar Comparison",
-        range_r=[0, 100]
-    )
+    # Create radar chart using Scatterpolar
+    fig = go.Figure()
     
-    for i, metric in enumerate(['Performance', 'Ease of Use', 'Memory Usage']):
+    methods = peft_df['Method'].tolist()
+    metrics = ['Efficiency', 'Performance', 'Ease of Use', 'Memory Usage']
+    
+    for metric in metrics:
         fig.add_trace(go.Scatterpolar(
-            r=peft_df[metric],
-            theta=peft_df['Method'],
+            r=peft_df[metric].tolist(),
+            theta=methods,
             fill='toself',
-            name=metric
+            name=metric,
+            line=dict(width=2)
         ))
+    
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100]
+            )),
+        title="PEFT Methods Radar Comparison",
+        showlegend=True,
+        height=500
+    )
     
     st.plotly_chart(fig, use_container_width=True)
 

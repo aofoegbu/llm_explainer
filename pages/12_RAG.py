@@ -1826,7 +1826,7 @@ resource_usage = monitor.stop_monitoring()
     
     # Simulate monitoring data
     monitoring_data = pd.DataFrame({
-        'Timestamp': pd.date_range('2024-01-01', periods=24, freq='H'),
+        'Timestamp': pd.date_range('2024-01-01', periods=24, freq='h'),
         'Queries_per_Hour': np.random.normal(1000, 200, 24),
         'Avg_Latency_ms': np.random.normal(800, 150, 24),
         'Success_Rate': np.random.normal(0.95, 0.02, 24),
