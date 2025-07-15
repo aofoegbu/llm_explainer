@@ -800,6 +800,64 @@ Rate the response on how well it follows this principle (1-10):
             }
         ]
         
+        # Process evaluation methods that were defined above
+        evaluation_methods = [
+            # Pairwise Comparison method (defined earlier in the code)
+            {
+                "method": "Pairwise Comparison",
+                "description": "Compare two responses and choose the better one",
+                "advantages": [
+                    "Intuitive for human annotators",
+                    "Relative judgments are easier",
+                    "Robust to individual biases", 
+                    "Scales well with more data"
+                ],
+                "disadvantages": [
+                    "Quadratic scaling with responses",
+                    "Can be inconsistent",
+                    "Doesn't provide absolute quality",
+                    "Sensitive to response ordering"
+                ],
+                "implementation": "# See PairwiseComparator class above"
+            },
+            # Absolute Scoring method (defined above)
+            {
+                "method": "Absolute Scoring", 
+                "description": "Rate responses on absolute quality scales",
+                "advantages": [
+                    "Provides absolute quality measures",
+                    "Can capture fine-grained differences",
+                    "Efficient for single response evaluation",
+                    "Allows for multi-dimensional scoring"
+                ],
+                "disadvantages": [
+                    "Subjective scale interpretation",
+                    "Annotator bias and drift",
+                    "Harder to achieve consistency", 
+                    "Scale boundary effects"
+                ],
+                "implementation": "# See AbsoluteScorer class above"
+            },
+            # Constitutional AI method (defined above)
+            {
+                "method": "Constitutional AI",
+                "description": "Use AI to evaluate responses against constitutional principles",
+                "advantages": [
+                    "Scalable automated evaluation",
+                    "Consistent application of principles",
+                    "Reduces human annotation burden",
+                    "Can incorporate complex criteria"
+                ],
+                "disadvantages": [
+                    "Limited by AI evaluator capability",
+                    "May perpetuate model biases", 
+                    "Less diverse than human judgment",
+                    "Requires careful prompt engineering"
+                ],
+                "implementation": "# See ConstitutionalEvaluator class above"
+            }
+        ]
+        
         for method in evaluation_methods:
             with st.expander(f"🔍 {method['method']}"):
                 st.markdown(method['description'])
