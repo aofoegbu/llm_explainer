@@ -1078,7 +1078,7 @@ with planner_tabs[2]:
             name=phase,
             marker_color=colors[i],
             text=f"{days} days",
-            textposition="middle center"
+            textposition="inside"
         ))
     
     timeline_fig.update_layout(

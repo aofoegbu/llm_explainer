@@ -49,29 +49,37 @@ for i, (step, x, y) in enumerate(zip(training_steps, x_positions, y_positions)):
         font=dict(size=10)
     )
     
-    # Add arrows
+    # Add arrows connecting to next step
     next_i = (i + 1) % len(training_steps)
     next_x, next_y = x_positions[next_i], y_positions[next_i]
     
-    # Calculate arrow position (from edge of current circle to edge of next)
-    arrow_start_x = x + 0.4 * (next_x - x) / np.sqrt((next_x - x)**2 + (next_y - y)**2)
-    arrow_start_y = y + 0.2 * (next_y - y) / np.sqrt((next_x - x)**2 + (next_y - y)**2)
-    arrow_end_x = next_x - 0.4 * (next_x - x) / np.sqrt((next_x - x)**2 + (next_y - y)**2)
-    arrow_end_y = next_y - 0.2 * (next_y - y) / np.sqrt((next_x - x)**2 + (next_y - y)**2)
+    # Calculate distance and direction
+    dx = next_x - x
+    dy = next_y - y
+    distance = np.sqrt(dx**2 + dy**2)
     
-    fig.add_annotation(
-        x=arrow_end_x, y=arrow_end_y,
-        ax=arrow_start_x, ay=arrow_start_y,
-        arrowhead=2, arrowsize=1, arrowwidth=2,
-        arrowcolor="darkblue"
-    )
+    if distance > 0:  # Avoid division by zero
+        # Calculate arrow positions from edge to edge of circles
+        arrow_start_x = x + 0.4 * dx / distance
+        arrow_start_y = y + 0.2 * dy / distance
+        arrow_end_x = next_x - 0.4 * dx / distance
+        arrow_end_y = next_y - 0.2 * dy / distance
+        
+        fig.add_annotation(
+            x=arrow_end_x, y=arrow_end_y,
+            ax=arrow_start_x, ay=arrow_start_y,
+            arrowhead=2, arrowsize=1.5, arrowwidth=2,
+            arrowcolor="darkblue",
+            showarrow=True
+        )
 
 fig.update_layout(
     title="Training Loop Flow",
     showlegend=False,
-    xaxis=dict(showgrid=False, showticklabels=False, range=[-3, 3]),
-    yaxis=dict(showgrid=False, showticklabels=False, range=[-3, 3]),
-    height=400
+    xaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-3, 3]),
+    yaxis=dict(showgrid=False, showticklabels=False, zeroline=False, range=[-3, 3]),
+    height=500,
+    plot_bgcolor='white'
 )
 
 st.plotly_chart(fig, use_container_width=True)
