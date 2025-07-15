@@ -64,8 +64,12 @@ for i, stage in enumerate(stages):
 st.header("🧭 Quick Navigation")
 st.markdown("Jump directly to any stage for detailed exploration:")
 
+# Core Pipeline Navigation (first 7 stages)
+st.subheader("📊 Core Training Pipeline")
 cols = st.columns(4)
-for i, stage in enumerate(stages):
+core_stages = stages[:7]  # First 7 stages are the core pipeline
+
+for i, stage in enumerate(core_stages):
     with cols[i % 4]:
         page_map = {
             0: "pages/02_Data_Collection.py",
@@ -78,4 +82,36 @@ for i, stage in enumerate(stages):
         }
         
         if st.button(f"🚀 {stage['name']}", key=f"nav_button_{i}"):
-            st.switch_page(page_map.get(i, "app.py"))
+            st.switch_page(page_map[i])
+
+# Advanced Techniques Navigation 
+st.subheader("🚀 Advanced LLM Techniques")
+advanced_cols = st.columns(3)
+advanced_pages = [
+    ("Prompt Engineering", "pages/09_Prompt_Engineering.py"),
+    ("In-Context Learning", "pages/10_In_Context_Learning.py"),
+    ("Embeddings", "pages/11_Embeddings.py"),
+    ("RAG Systems", "pages/12_RAG.py"),
+    ("AI Agents", "pages/13_Agents.py"),
+    ("RLHF", "pages/16_RLHF.py")
+]
+
+for i, (name, page) in enumerate(advanced_pages):
+    with advanced_cols[i % 3]:
+        if st.button(f"⚡ {name}", key=f"advanced_nav_{i}"):
+            st.switch_page(page)
+
+# Infrastructure & Ethics Navigation
+st.subheader("🔧 Infrastructure & Ethics")
+infra_cols = st.columns(3)
+infra_pages = [
+    ("Data Engineering", "pages/14_Data_Engineering.py"),
+    ("Model Selection", "pages/15_Model_Selection.py"),
+    ("Explainability", "pages/17_Explainability.py"),
+    ("Bias Mitigation", "pages/18_Bias_Mitigation.py")
+]
+
+for i, (name, page) in enumerate(infra_pages):
+    with infra_cols[i % 3]:
+        if st.button(f"🛠️ {name}", key=f"infra_nav_{i}"):
+            st.switch_page(page)
