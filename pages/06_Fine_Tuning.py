@@ -719,7 +719,7 @@ class RewardModel(nn.Module):
         return reward.squeeze(-1)
 
 def ranking_loss(rewards_preferred, rewards_dispreferred):
-    """Bradley-Terry ranking loss"""
+    \"\"\"Bradley-Terry ranking loss\"\"\"
     return -torch.log(torch.sigmoid(rewards_preferred - rewards_dispreferred)).mean()
 
 # Training loop

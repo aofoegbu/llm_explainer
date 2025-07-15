@@ -423,7 +423,7 @@ import multiprocessing as mp
 from functools import partial
 
 def process_batch(batch, tokenizer, max_length):
-    """Process a batch of texts"""
+    \"\"\"Process a batch of texts\"\"\"
     results = []
     for text in batch:
         # Apply all preprocessing steps
@@ -435,7 +435,7 @@ def process_batch(batch, tokenizer, max_length):
     return results
 
 def parallel_preprocess(texts, tokenizer, max_length=512, batch_size=1000, n_workers=4):
-    """Preprocess texts in parallel"""
+    \"\"\"Preprocess texts in parallel\"\"\"
     
     # Split into batches
     batches = [texts[i:i+batch_size] for i in range(0, len(texts), batch_size)]
