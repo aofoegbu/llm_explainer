@@ -2,6 +2,10 @@
 
 A comprehensive Streamlit-based educational platform for exploring the complete Large Language Model (LLM) training pipeline with interactive visualizations and in-depth technical insights.
 
+https://machine-learning-explorer-augustineogelo.replit.app/
+
+![LLM Explainer](screenshots/llm_explainer.png)
+
 ## Overview
 
 This application provides an interactive journey through Large Language Model development, covering everything from data collection to deployment. It serves as both an educational resource and practical guide for understanding modern LLM training methodologies.
