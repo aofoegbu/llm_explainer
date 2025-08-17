@@ -2,7 +2,7 @@
 
 A comprehensive Streamlit-based educational platform for exploring the complete Large Language Model (LLM) training pipeline with interactive visualizations and in-depth technical insights.
 
-![LLM Training Guide](screenshots/llm_guide.png)
+![LLM Training Guide](screenshot/llm_guide.png)
 
 ## Overview
 
