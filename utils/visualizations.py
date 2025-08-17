@@ -91,12 +91,18 @@ def create_pipeline_flowchart():
 def create_progress_chart(completed_stages, total_stages):
     """Create a progress visualization showing learning journey completion."""
     
-    completion_percentage = (len(completed_stages) / total_stages) * 100
+    # Handle both list and integer inputs for completed_stages
+    if isinstance(completed_stages, list):
+        completed_count = len(completed_stages)
+    else:
+        completed_count = completed_stages
+    
+    completion_percentage = (completed_count / total_stages) * 100
     
     # Create a donut chart for progress
     fig = go.Figure(data=[go.Pie(
         labels=['Completed', 'Remaining'],
-        values=[len(completed_stages), total_stages - len(completed_stages)],
+        values=[completed_count, total_stages - completed_count],
         hole=0.6,
         marker_colors=['#4ECDC4', '#E8E8E8'],
         textinfo='none',
