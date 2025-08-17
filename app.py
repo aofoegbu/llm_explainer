@@ -1,8 +1,6 @@
 import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
+# Lazy import plotly to reduce startup time
 from utils.pipeline_data import get_pipeline_stages, get_stage_details
-from utils.visualizations import create_pipeline_flowchart, create_progress_chart
 
 # Configure page
 st.set_page_config(
@@ -19,6 +17,17 @@ if 'current_stage' not in st.session_state:
     st.session_state.current_stage = 0
 
 def main():
+    # Show loading progress
+    if 'app_loaded' not in st.session_state:
+        st.session_state.app_loaded = False
+    
+    if not st.session_state.app_loaded:
+        with st.spinner('Loading Ogelo Concise LLM Training Pipeline Guide...'):
+            # Initialize data
+            stages = get_pipeline_stages()
+            st.session_state.app_loaded = True
+            st.rerun()
+    
     st.title("Ogelo Concise LLM Training Pipeline Guide")
     st.markdown("### An Interactive Journey Through Large Language Model Development")
     
@@ -55,8 +64,13 @@ def main():
     with col1:
         st.header("📊 Pipeline Overview")
         
-        # Interactive pipeline flowchart
-        fig = create_pipeline_flowchart()
+        # Interactive pipeline flowchart - cached for performance
+        @st.cache_data
+        def get_pipeline_flowchart():
+            from utils.visualizations import create_pipeline_flowchart
+            return create_pipeline_flowchart()
+        
+        fig = get_pipeline_flowchart()
         st.plotly_chart(fig, use_container_width=True)
         
         # Current stage details
@@ -85,8 +99,13 @@ def main():
     with col2:
         st.header("📈 Learning Progress")
         
-        # Progress chart
-        progress_fig = create_progress_chart(st.session_state.completed_stages, len(stages))
+        # Progress chart - cached for performance
+        @st.cache_data
+        def get_progress_chart(completed_count, total_count):
+            from utils.visualizations import create_progress_chart
+            return create_progress_chart(completed_count, total_count)
+        
+        progress_fig = get_progress_chart(len(st.session_state.completed_stages), len(stages))
         st.plotly_chart(progress_fig, use_container_width=True)
         
         st.markdown("---")
