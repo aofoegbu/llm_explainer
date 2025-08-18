@@ -2,6 +2,8 @@
 
 A comprehensive Streamlit-based educational platform for exploring the complete Large Language Model (LLM) training pipeline with interactive visualizations and in-depth technical insights.
 
+https://ogelollm.app
+
 ![LLM Training Guide](screenshot/llm_guide.png)
 
 ## Overview
