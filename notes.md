@@ -13,7 +13,7 @@ This repository contains a comprehensive Streamlit web application that provides
 - **July 15, 2025**: Created comprehensive README.md with full feature documentation
 
 ## User Preferences
-
+ 
 Preferred communication style: Simple, everyday language.
 Application title: Changed from "🤖 Complete LLM Training Pipeline Guide" to "Ogelo Concise LLM Training Pipeline Guide" (July 15, 2025)
 
